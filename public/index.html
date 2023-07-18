@@ -65,7 +65,7 @@
     <button id="data_button" class="file-upload-btn2" type="button">데이터 전송</button>
   </div>
 
-  <div id="label-container"></div>
+  <div id="label-container" style="color: antiquewhite;"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
@@ -105,6 +105,12 @@
       // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
       // or files from your local hard drive
       // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+      // try {
+      //   model = await tmImage.load(modelURL, metadataURL);
+
+      // } catch (error) {
+      //   alert(error);
+      // }
       model = await tmImage.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
 
@@ -118,7 +124,6 @@
       // append elements to the DOM
       //document.getElementById("webcam-container").appendChild(webcam.canvas);
       labelContainer = document.getElementById("label-container");
-      labelContainer.style = 'left';
       for (let i = 0; i < maxPredictions; i++) { // and class labels
         //labelContainer.appendChild(document.createElement("div"));
         const object = document.createElement("div");
@@ -140,18 +145,72 @@
     }
 
     function linkChnage() {
-      let linkAddress = prompt("링크를 입력하세요");
+      // let linkAddress = prompt("링크를 입력하세요", {
+      //   title: 'test'
+      // });
 
-      alert(linkAddress);
+      // alert(linkAddress);
 
-      if (linkAddress != null && linkAddress != '') {
-        URL = "https://teachablemachine.withgoogle.com/models/" + linkAddress + "/"
+      // if (linkAddress != null && linkAddress != '') {
+      //   URL = "https://teachablemachine.withgoogle.com/models/" + linkAddress + "/"
+      // }
+
+      customPrompt("링크를 입력하세요").then(result => {
+        if (result == null || result == '') {
+          //document.getElementById("result").innerHTML = "";
+          alert("실패! 링크 다시 입력");
+        }
+        else {
+          //document.getElementById("result").innerHTML = `${result}`;
+          alert(result);
+          URL = "https://teachablemachine.withgoogle.com/models/" + result + "/"
+
+          target2.disabled = false;
+          target.disabled = true;
+          //target3.disabled = true;
+          target4.disabled = true;
+        }
+      })
+
+      function customPrompt(message) {
+        let element = document.createElement("div");
+        element.setAttribute("class", "promptBox");
+        element.innerHTML = `
+        <div class="promptModal">
+            <form class="promptForm">
+                <p>${message}</p>
+                <div class="buttonBox">
+                    <input type="text" id="input"  placeholder="Nmisoiyqz...">
+                    <button id="submitBtn" type="submit">확인</button>
+                </div>
+            </form>
+        </div>
+        `;
+
+        // Append the prompt element to the body
+        document.body.appendChild(element);
+
+        // Automatically focus on the input when the prompt is opened
+        document.getElementById("input").focus();
+
+        return new Promise((resolve, reject) => {
+          // When the user submit the form, you'll get the value
+          document.querySelector(".promptForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            let value = document.getElementById("input").value;
+            resolve(value);
+            element.remove();
+          });
+
+          // Remove the prompt if user clicks Escape key
+          window.addEventListener("keydown", (e) => {
+            if (e.keyCode == 27) {
+              resolve(null);
+              element.remove();
+            }
+          })
+        })
       }
-
-      target2.disabled = false;
-      target.disabled = true;
-      target3.disabled = true;
-      target4.disabled = true;
     }
 
     // async function loop() {
@@ -176,6 +235,8 @@
         document.getElementsByClassName('layerPopup')[0].style.display = 'none';
         target3.disabled = false;
         target4.disabled = false;
+
+        document.getElementById("data_button").click();
       } else {
         alert('이미지를 선택해주세요');
       }
