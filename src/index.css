@@ -1,13 +1,187 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale; */
+}
+
+.layerPopup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 120%;
+    height: 120%;
+    background: rgba(146, 143, 143, 0.384);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    margin: -30px 0 0 -30px;
+}
+.spinner {
+    position: absolute;
+    top: 40%;
+    left: 39.5%;
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #ffc462; /* orange */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spinner 2s linear infinite;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.main {
+	background : #fff;
+}
+
+.file-upload {
+	background-color: #fff;
+	width: 100%;
+	/* margin: 0 auto; */
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+.file-upload-btn {
+	width: 95%;
+	margin: 0;
+	color: #fff;
+	/* background: #1fb264; */
+	background: linear-gradient(#ffc462, #ff872e);
+	margin: auto;
+	display : block;
+	border: none;
+	padding: 10px;
+	border-radius: 4px;
+	transition: all 0.2s ease;
+	outline: none;
+	text-transform: uppercase;
+	font-size: 15px;
+	font-weight: 600;
+}
+.file-upload-btn2 {
+	width: 24%;
+	margin: 0;
+	color: #b45611;
+	background: #fff;
+	border: 2px solid #f78f43;
+	font-family: 'SBAggroL';
+	font-weight: 300;
+	padding-top: 10px;
+	padding-bottom: 8px;
+	padding-left: 8px;
+	padding-right: 8px;
+	border-radius: 8px;
+	transition: all 0.2s ease;
+	outline: none;
+	text-transform: uppercase;
+}
+.file-upload-btn2:disabled {
+	color: #acacac;
+	background: #f3f3f3;
+	border: 2px solid #acacac;
+}
+.file-upload-btn:hover {
+	background: linear-gradient(#ffc462, #ff892e);
+	color: #ffffff;
+	transition: all 0.2s ease;
+	cursor: pointer;
+}
+.file-upload-btn:active {
+	border: 0;
+	transition: all 0.2s ease;
+}
+.file-upload-content {
+	display: none;
+	text-align: center;
+}
+.file-upload-input {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	outline: none;
+	opacity: 0;
+	cursor: pointer;
+}
+.image-upload-wrap {
+	margin-top: 20px;
+	margin-left: 7px;
+	margin-right: 10px;
+	border-radius: 10px;
+	border: 2.5px dashed #acacac;
+	position: relative;
+}
+.image-dropping,
+.image-upload-wrap:hover {
+	background-color: #acacac;
+	border: 4px dashed #ffffff;
+}
+.image-title-wrap {
+	padding: 0 15px 15px 15px;
+	color: #222;
+}
+.drag-text {
+	text-align: center;
+	font-family: 'Noto Sans KR', sans-serif;
+}
+.drag-text h3 {
+	text-transform: uppercase;
+	color: #b45611;
+	padding-bottom: 45px;
+	padding-top: 0px;
+	margin-top: 5px;
+}
+.file-upload-image {
+	max-height: 300px;
+	max-width: 300px;
+	margin: auto;
+	padding: 20px;
+}
+.remove-image {
+	width: 200px;
+	margin: 0;
+	color: #fff;
+	background: #cd4535;
+	border: none;
+	padding: 10px;
+	border-radius: 4px;
+	border-bottom: 4px solid #b02818;
+	transition: all 0.2s ease;
+	outline: none;
+	text-transform: uppercase;
+	font-weight: 700;
+}
+.remove-image:hover {
+	background: #c13b2a;
+	color: #ffffff;
+	transition: all 0.2s ease;
+	cursor: pointer;
+}
+.remove-image:active {
+	border: 0;
+	transition: all 0.2s ease;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@font-face {
+    font-family: 'SBAggroL';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroL.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
