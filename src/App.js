@@ -59,7 +59,7 @@ export default function App() {
       //alert(document.getElementById('label-container').innerText);
       if (window.android) {
         window.android.showToastMessage(document.getElementById('label-container').innerText);
-        alert("전송 완료");
+        //alert("전송 완료");
       } else {
         alert("전송 실패");
       }
