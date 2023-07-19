@@ -52,11 +52,11 @@
 
     <div id="content" class="file-upload-content">
       <img class="file-upload-image" id="face-image" src="#" alt="your image" />
-      <div class="image-title-wrap">
+      <!-- <div class="image-title-wrap">
         <button type="button" onclick="removeUpload()" class="remove-image">Remove Image
-          <!-- <span class="image-title">Uploaded Image</span> -->
+          <span class="image-title">Uploaded Image</span>
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 
@@ -67,7 +67,16 @@
     <button id="data_button" class="file-upload-btn2" type="button">데이터 전송</button>
   </div>
 
-  <div id="label-container" style="color: antiquewhite;"></div>
+  <div id="label-container" style="color: white;"></div>
+
+  <!-- <div class="promptModal">
+    <form class="promptForm">
+      <p class="explain_text"></p>
+      <div class="okBtn">
+        <button class="btn pink_btn modal_close">확인</button>
+      </div>
+    </div>
+  </div> -->
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
@@ -113,7 +122,39 @@
       // } catch (error) {
       //   alert(error);
       // }
-      model = await tmImage.load(modelURL, metadataURL);
+
+      const actualRunTime = 10000;
+
+      const request = (job) =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(job);
+          }, actualRunTime);
+        });
+
+      const timeOut = (maxWaitTime) =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve("대기시간 초과");
+          }, maxWaitTime);
+        });
+
+      const requestWithTimeOut = async (job, maxWaitTime) => {
+        const result = await Promise.race([request(job), timeOut(maxWaitTime)]);
+        if (result === "대기시간 초과") throw Error("대기시간")
+        return result;
+      };
+
+      try {
+        model = await requestWithTimeOut(tmImage.load(modelURL, metadataURL), 15000);
+      } catch (e) {
+        alert("올바르지 않은 링크입니다 다시 입력해주세요!");
+        document.getElementById("start_button").setAttribute('disabled', true);
+        document.getElementsByClassName('layerPopup')[0].style.display = 'none';
+        return;
+      }
+
+      //model = await tmImage.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
 
       // Convenience function to setup a webcam

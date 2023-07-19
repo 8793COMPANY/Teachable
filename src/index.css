@@ -98,6 +98,34 @@ body {
     color: white;
 }
 
+.explain_text {
+	color: #af6400;
+	font-size: 18px;
+	font-family: 'SBAggroL';
+	font-weight: 300;
+    text-align: center;
+    letter-spacing: initial;
+}
+
+.okBtn {
+	background: linear-gradient(#ffc462, #ff872e);
+    color: white;
+	width: 20%;
+	padding-top: 12px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	margin: 10px;
+    outline: none;
+    border: none;
+    color: white;
+	font-size: 18px;
+	font-family: 'SBAggroL';
+	font-weight: 300;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .layerPopup {
     display: none;
     position: fixed;
