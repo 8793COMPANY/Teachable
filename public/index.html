@@ -5,124 +5,81 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Web site created using create-react-app" />
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" /> -->
-  <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-  <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
-  <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-  <!-- <title>React App</title> -->
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;900&display=swap" rel="stylesheet">
+  <!-- custom alert : sweetalert -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+  <!-- image upload open source -->
+  <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+  <!-- teachablemachine -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 </head>
 
 <body id="body" class="main">
+  <!-- progressbar & gray background -->
   <div class="layerPopup">
     <div class="spinner"></div>
   </div>
 
-  <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-
+  <!-- image upload -->
   <div class="file-upload">
     <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger('click')">사진 업로드하기</button>
 
-    <div id="upload" class="image-upload-wrap">
-      <input id="test" class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
-      <!-- <input id="test" class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" /> -->
+    <div class="image-upload-wrap">
+      <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
       <div class="drag-text">
-        <img src="upload_btn.png" style="width: 60px; height: 60px; margin-top: 50px;">
-        <h3 style="font-weight:400; font-size: 18px;">사진 업로드하기</h3>
+        <img src="upload_btn.png">
+        <h3>사진 업로드하기</h3>
       </div>
     </div>
 
-    <div id="content" class="file-upload-content">
-      <img class="file-upload-image" id="face-image" src="#" alt="your image" />
-      <!-- <div class="image-title-wrap">
-        <button type="button" onclick="removeUpload()" class="remove-image">Remove Image
-          <span class="image-title">Uploaded Image</span>
-        </button>
-      </div> -->
+    <div class="file-upload-content">
+      <img class="file-upload-image" id="select-image" src="#" alt="your image" />
     </div>
   </div>
 
-  <div style="text-align: center; font-weight: 100;">
-    <button id="start_button" class="file-upload-btn2" type="button" onclick="init()">모델 셋팅</button>
-    <button id="predict_button" class="file-upload-btn2" type="button" onclick="predict()">분석</button>
-    <button id="link_button" class="file-upload-btn2" type="button" onclick="linkChnage()">모델 연동</button>
-    <button id="data_button" class="file-upload-btn2" type="button">데이터 전송</button>
+  <div style="text-align: center;">
+    <button id="start_button" class="bottom-click-btn" type="button" onclick="init()">모델 셋팅</button>
+    <button id="predict_button" class="bottom-click-btn" type="button" onclick="predict()">분석</button>
+    <button id="link_button" class="bottom-click-btn" type="button" onclick="linkChnage()">모델 연동</button>
+    <button id="data_button" class="bottom-click-btn" type="button">데이터 전송</button>
   </div>
 
-  <div id="label-container" style="color: white;"></div>
-
-  <!-- <div class="promptModal">
-    <form class="promptForm">
-      <p class="explain_text"></p>
-      <div class="okBtn">
-        <button class="btn pink_btn modal_close">확인</button>
-      </div>
-    </div>
-  </div> -->
-
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+  <div id="label-container" class="bottom-text"></div>
+  <div id="predict-model" class="bottom-text"></div>
 
   <script type="text/javascript">
-    // More API functions here:
-    // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
-
-    // the link to your model provided by Teachable Machine export panel
-    //const URL = "./my_model/";
     // 과일 모델
-    //https://teachablemachine.withgoogle.com/models/zXprIP4oy/
-    let URL = "https://teachablemachine.withgoogle.com/models/zXprIP4oy/";
-    // 색상 모델
-    //https://teachablemachine.withgoogle.com/models/an2_IIHBb/
+    //https://teachablemachine.withgoogle.com/models/7PbjkEbwL/
+    // 표정 모델
+    //https://teachablemachine.withgoogle.com/models/PiGsoadFh/
+    // 분리수거 모델
+    //https://teachablemachine.withgoogle.com/models/QrHULLrzP/
+    // 센서 모델(현재 동물 모델 링크로 되어있음)
+    //https://teachablemachine.withgoogle.com/models/e0WNslKlA/
 
-    //https://teachablemachine.withgoogle.com/models/[...]
-    //https://teachablemachine.withgoogle.com/models/zXprIP4oy/
+    let URL, model, webcam, labelContainer, maxPredictions;
 
-    let model, webcam, labelContainer, maxPredictions;
+    const start_button = document.getElementById('start_button');
+    const predict_button = document.getElementById('predict_button');
+    const link_button = document.getElementById('link_button');
+    const data_button = document.getElementById('data_button');
 
-    const target = document.getElementById('predict_button');
-    const target2 = document.getElementById('start_button');
-    const target3 = document.getElementById('link_button');
-    const target4 = document.getElementById('data_button');
-    target.disabled = true;
-    target4.disabled = true;
+    predict_button.disabled = true;
+    data_button.disabled = true;
 
-    // Load the image model and setup the webcam
+    // Load the image model
     async function init() {
+      // loading start
       document.getElementsByClassName('layerPopup')[0].style.display = 'block';
 
+      URL = document.getElementById('predict-model').innerText;
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
 
-      // load the model and metadata
-      // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-      // or files from your local hard drive
-      // Note: the pose library adds "tmImage" object to your window (window.tmImage)
-      // try {
-      //   model = await tmImage.load(modelURL, metadataURL);
-
-      // } catch (error) {
-      //   alert(error);
-      // }
-
+      // URL error check
       const actualRunTime = 10000;
 
       const request = (job) =>
@@ -148,70 +105,50 @@
       try {
         model = await requestWithTimeOut(tmImage.load(modelURL, metadataURL), 15000);
       } catch (e) {
-        alert("올바르지 않은 링크입니다 다시 입력해주세요!");
-        document.getElementById("start_button").setAttribute('disabled', true);
+        customAlert('올바르지 않은 링크입니다!\n다시 입력해주세요!');
+        start_button.disabled = true;
         document.getElementsByClassName('layerPopup')[0].style.display = 'none';
         return;
       }
 
-      //model = await tmImage.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
 
-      // Convenience function to setup a webcam
-      // const flip = true; // whether to flip the webcam
-      // webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
-      // await webcam.setup(); // request access to the webcam
-      // await webcam.play();
-      // window.requestAnimationFrame(loop);
-
       // append elements to the DOM
-      //document.getElementById("webcam-container").appendChild(webcam.canvas);
       labelContainer = document.getElementById("label-container");
-      for (let i = 0; i < maxPredictions; i++) { // and class labels
-        //labelContainer.appendChild(document.createElement("div"));
-        const object = document.createElement("div");
-        const object2 = document.createElement("div");
-        if (i == 0) {
-          object.style.paddingTop = "20px";
-          //object2.style.paddingTop = "20px";
-        }
 
-        //labelContainer.appendChild(object);
-        labelContainer.append(object, object2);
+      // all node remove
+      while (labelContainer.hasChildNodes()) {
+        labelContainer.removeChild(labelContainer.firstChild);
       }
 
-      //alert("완료");
-      document.getElementById("start_button").setAttribute('disabled', true);
-      target.disabled = false;
+      let count = labelContainer.childElementCount;
+
+      for (let i = 0; i < maxPredictions; i++) {
+        const object = document.createElement("div");
+        labelContainer.append(object);
+      }
+
+      start_button.disabled = true;
+      predict_button.disabled = false;
+
+      // loading end
       document.getElementsByClassName('layerPopup')[0].style.display = 'none';
-      //document.getElementById("predict_button").setAttribute('disabled', false);
     }
 
     function linkChnage() {
-      // let linkAddress = prompt("링크를 입력하세요", {
-      //   title: 'test'
-      // });
-
-      // alert(linkAddress);
-
-      // if (linkAddress != null && linkAddress != '') {
-      //   URL = "https://teachablemachine.withgoogle.com/models/" + linkAddress + "/"
-      // }
-
       customPrompt("링크를 입력하세요").then(result => {
         if (result == null || result == '') {
-          //document.getElementById("result").innerHTML = "";
-          alert("실패! 링크 다시 입력");
+          customAlert("실패! 링크 다시 입력");
         }
         else {
-          //document.getElementById("result").innerHTML = `${result}`;
-          alert(result);
-          URL = "https://teachablemachine.withgoogle.com/models/" + result + "/"
+          customAlert(result);
 
-          target2.disabled = false;
-          target.disabled = true;
-          //target3.disabled = true;
-          target4.disabled = true;
+          URL = "https://teachablemachine.withgoogle.com/models/" + result + "/";
+          document.getElementById('predict-model').innerText = URL;
+
+          start_button.disabled = false;
+          predict_button.disabled = true;
+          data_button.disabled = true;
         }
       })
 
@@ -222,9 +159,18 @@
         <div class="promptModal">
             <form class="promptForm">
                 <p>${message}</p>
-                <div class="buttonBox">
-                    <input type="text" id="input"  placeholder="Nmisoiyqz...">
+                <div class="inputBox">
+                    <input type="text" id="input" placeholder="Nmisoiyqz...">
                     <button id="submitBtn" type="submit">확인</button>
+                </div>
+                <div class="radioBox">
+                  <label><input type='radio' name='model' value='7PbjkEbwL'><p>과일모델</p></label>
+                  <label><input type='radio' name='model' value='PiGsoadFh'><p>표정모델</p></label>
+                  <label><input type='radio' name='model' value='QrHULLrzP'><p>분리수거모델</p></label>
+                  <label><input type='radio' name='model' value='e0WNslKlA'><p>센서모델</p></label>
+                </div>
+                <div>
+                  <button id="submitBtn2" type="button">모델선택</button>
                 </div>
             </form>
         </div>
@@ -233,11 +179,8 @@
         // Append the prompt element to the body
         document.body.appendChild(element);
 
-        // Automatically focus on the input when the prompt is opened
-        document.getElementById("input").focus();
-
         return new Promise((resolve, reject) => {
-          // When the user submit the form, you'll get the value
+          // When the user submit the form, you'll get the value >> submitBtn
           document.querySelector(".promptForm").addEventListener("submit", (e) => {
             e.preventDefault();
             let value = document.getElementById("input").value;
@@ -245,7 +188,27 @@
             element.remove();
           });
 
-          // Remove the prompt if user clicks Escape key
+          // submitBtn2
+          document.getElementById("submitBtn2").addEventListener("click", (e) => {
+            e.preventDefault();
+            const modelList = document.getElementsByName('model');
+            let value;
+
+            modelList.forEach((node) => {
+              if (node.checked) {
+                value = node.value;
+              }
+            });
+            if (value == null || value == '') {
+              customAlert("모델을 선택해주세요!");
+              return;
+            }
+
+            resolve(value);
+            element.remove();
+          });
+
+          // Remove the prompt if user clicks Escape key >> desktop
           window.addEventListener("keydown", (e) => {
             if (e.keyCode == 27) {
               resolve(null);
@@ -256,72 +219,55 @@
       }
     }
 
-    // async function loop() {
-    //   webcam.update(); // update the webcam frame
-    //   await predict();
-    //   window.requestAnimationFrame(loop);
-    // }
-
-    // run the webcam image through the image model
+    // run the file image through the image model
     async function predict() {
-      // predict can take in an image, video or canvas html element
-      var image = document.getElementById("face-image");
+      let image = document.getElementById("select-image");
 
       if (image.getAttribute('src') != "#") {
         document.getElementsByClassName('layerPopup')[0].style.display = 'block';
+
         const prediction = await model.predict(image, false);
         for (let i = 0; i < maxPredictions; i++) {
           const classPrediction =
             prediction[i].className + ":" + (prediction[i].probability.toFixed(2) * 100) + "%";
           labelContainer.childNodes[i].innerHTML = classPrediction;
         }
-        document.getElementsByClassName('layerPopup')[0].style.display = 'none';
-        target3.disabled = false;
-        target4.disabled = false;
 
-        document.getElementById("data_button").click();
+        link_button.disabled = false;
+        data_button.disabled = false;
+        // predict data send to android
+        $("#data_button").trigger('click', 'check');
+
+        document.getElementsByClassName('layerPopup')[0].style.display = 'none';
       } else {
-        alert('이미지를 선택해주세요');
+        customAlert('이미지를 선택해주세요');
       }
     }
   </script>
 
   <script>
-    var title = document.getElementById('title');
-
     function readURL(input) {
-      //title.innerText = title + "들어옴1";
-
       if (input.files && input.files[0]) {
-        //title.innerText = title + "들어옴2";
-        //alert("갱신2");
         var reader = new FileReader();
         reader.onload = function (e) {
-          //title.innerText = title + "들어옴3";
-          //alert("갱신3");
           $('.image-upload-wrap').hide();
           $('.file-upload-image').attr('src', e.target.result);
           $('.file-upload-content').show();
-          $('.image-title').html(input.files[0].name);
         };
         reader.readAsDataURL(input.files[0]);
       } else {
-        //title.innerText = "안들어옴";
-        removeUpload();
+        customAlert("이미지를 읽어오지 못했습니다!\n다시 시도해주세요!");
       }
     }
 
-    function removeUpload() {
-      $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-      $('.file-upload-content').hide();
-      $('.image-upload-wrap').show();
+    function customAlert(getText) {
+      swal({
+        text: getText,
+        buttons: {
+          confirm: "확인",
+        },
+      })
     }
-    $('.image-upload-wrap').bind('dragover', function () {
-      $('.image-upload-wrap').addClass('image-dropping');
-    });
-    $('.image-upload-wrap').bind('dragleave', function () {
-      $('.image-upload-wrap').removeClass('image-dropping');
-    });
   </script>
 
   <div id="root"></div>
