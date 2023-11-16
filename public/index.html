@@ -42,7 +42,7 @@
 
   <div style="text-align: center;">
     <button id="start_button" class="bottom-click-btn" type="button" onclick="init()">모델 셋팅</button>
-    <button id="predict_button" class="bottom-click-btn" type="button" onclick="predict()">분석</button>
+    <button id="predict_button" class="bottom-click-btn" type="button" onclick="progressbar()">분석</button>
     <button id="link_button" class="bottom-click-btn" type="button" onclick="linkChnage()">모델 연동</button>
     <button id="data_button" class="bottom-click-btn" type="button">데이터 전송</button>
   </div>
@@ -59,6 +59,8 @@
     //https://teachablemachine.withgoogle.com/models/QrHULLrzP/
     // 센서 모델(현재 동물 모델 링크로 되어있음)
     //https://teachablemachine.withgoogle.com/models/e0WNslKlA/
+    // 환자 모델
+    //https://teachablemachine.withgoogle.com/models/njGR6-nWU/
 
     let URL, model, webcam, labelContainer, maxPredictions;
 
@@ -152,6 +154,8 @@
         }
       })
 
+      // <label><input type='radio' name='model' value='e0WNslKlA'><p>센서모델</p></label>
+
       function customPrompt(message) {
         let element = document.createElement("div");
         element.setAttribute("class", "promptBox");
@@ -167,7 +171,7 @@
                   <label><input type='radio' name='model' value='7PbjkEbwL'><p>과일모델</p></label>
                   <label><input type='radio' name='model' value='PiGsoadFh'><p>표정모델</p></label>
                   <label><input type='radio' name='model' value='QrHULLrzP'><p>분리수거모델</p></label>
-                  <label><input type='radio' name='model' value='e0WNslKlA'><p>센서모델</p></label>
+                  <label><input type='radio' name='model' value='njGR6-nWU'><p>환자모델</p></label>
                 </div>
                 <div>
                   <button id="submitBtn2" type="button">모델선택</button>
@@ -219,29 +223,46 @@
       }
     }
 
+    function progressbar() {
+      document.getElementsByClassName('layerPopup')[0].style.display = 'block';
+      predict();
+      document.getElementsByClassName('layerPopup')[0].style.display = 'none';
+    }
+
     // run the file image through the image model
     async function predict() {
+      //document.getElementsByClassName('layerPopup')[0].style.display = 'block';
       let image = document.getElementById("select-image");
+      let start, start2, start3;
 
+      //start = new Date();
       if (image.getAttribute('src') != "#") {
-        document.getElementsByClassName('layerPopup')[0].style.display = 'block';
-
+        //start = new Date();
+        //alert(start2 - start);
         const prediction = await model.predict(image, false);
+        //start2 = new Date();
+        //alert(start2 - start);
+        start3 = new Date();
         for (let i = 0; i < maxPredictions; i++) {
           const classPrediction =
             prediction[i].className + ":" + (prediction[i].probability.toFixed(2) * 100) + "%";
           labelContainer.childNodes[i].innerHTML = classPrediction;
         }
-
+        //let end = new Date();
+        //alert(end-start3);
         link_button.disabled = false;
         data_button.disabled = false;
+        //let end2 = new Date();
         // predict data send to android
         $("#data_button").trigger('click', 'check');
-
-        document.getElementsByClassName('layerPopup')[0].style.display = 'none';
+        //let end3 = new Date();
+        //alert(end3-end2);
       } else {
         customAlert('이미지를 선택해주세요');
       }
+      //document.getElementsByClassName('layerPopup')[0].style.display = 'none';
+      //let end = new Date();
+      //alert(end - start3);
     }
   </script>
 
