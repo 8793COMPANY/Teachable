@@ -36,7 +36,7 @@ export default function App() {
           return;
         }
 
-        image.onload = () => {
+        image.onload = async () => {
           console.log("앱 이미지 로드 완료");
           console.log("naturalWidth:", image.naturalWidth);
           console.log("naturalHeight:", image.naturalHeight);
