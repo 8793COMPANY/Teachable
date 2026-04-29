@@ -47,12 +47,12 @@ export default function App() {
 
           console.log("앱 이미지가 select-image에 반영됨. 이제 분석 버튼을 눌러 테스트하세요.");
 
-          if (typeof window.predict === "function") {
-            console.log("predict 실행");
-            await window.predict();
-          } else {
-            console.log("predict 함수 없음");
-          }
+          // if (typeof window.predict === "function") {
+          //   console.log("predict 실행");
+          //   await window.predict();
+          // } else {
+          //   console.log("predict 함수 없음");
+          // }
         };
 
         image.onerror = () => {
