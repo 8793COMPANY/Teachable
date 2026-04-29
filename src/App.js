@@ -46,6 +46,13 @@ export default function App() {
           if (uploadContent) uploadContent.style.display = "block";
 
           console.log("앱 이미지가 select-image에 반영됨. 이제 분석 버튼을 눌러 테스트하세요.");
+
+          if (typeof window.predict === "function") {
+            console.log("predict 실행");
+            await window.predict();
+          } else {
+            console.log("predict 함수 없음");
+          }
         };
 
         image.onerror = () => {
@@ -54,7 +61,9 @@ export default function App() {
         };
 
         console.log("앱에서 받은 base64 길이:", totalText.length);
-        image.src = totalText;
+        console.log("base64 앞부분:", totalText.substring(0, 50));
+        // image.src = totalText;
+        image.src = totalText + "#t=" + new Date().getTime();
       } else {
         if (type2 !== "" && type2 !== "no link") {
           let type3 = type2.split("/")[4];
