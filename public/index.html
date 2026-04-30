@@ -235,6 +235,33 @@
       document.getElementsByClassName('layerPopup')[0].style.display = 'none';
     }
 
+    function makeSquareCanvas(image) {
+      const size = 224;
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = size;
+      canvas.height = size;
+
+      const iw = image.naturalWidth;
+      const ih = image.naturalHeight;
+
+      const scale = Math.min(size / iw, size / ih);
+
+      const newW = iw * scale;
+      const newH = ih * scale;
+
+      const dx = (size - newW) / 2;
+      const dy = (size - newH) / 2;
+
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, size, size);
+
+      ctx.drawImage(image, 0, 0, iw, ih, dx, dy, newW, newH);
+
+      return canvas;
+    }
+
     // run the file image through the image model
     async function predict() {
       //document.getElementsByClassName('layerPopup')[0].style.display = 'block';
@@ -245,7 +272,19 @@
       if (image.getAttribute('src') != "#") {
         //start = new Date();
         //alert(start2 - start);
-        const prediction = await model.predict(image, false);
+
+        // const prediction = await model.predict(image, false);
+        console.log("분석 직전 원본 width:", image.naturalWidth);
+        console.log("분석 직전 원본 height:", image.naturalHeight);
+        console.log("분석 직전 src length:", image.src.length);
+
+        const inputCanvas = makeSquareCanvas(image);
+
+        console.log("분석 입력 canvas width:", inputCanvas.width);
+        console.log("분석 입력 canvas height:", inputCanvas.height);
+
+        const prediction = await model.predict(inputCanvas, false);
+
         //start2 = new Date();
         //alert(start2 - start);
         start3 = new Date();
