@@ -50,6 +50,11 @@
   <div id="label-container" class="bottom-text"></div>
   <div id="predict-model" class="bottom-text"></div>
 
+  <div style="text-align:center; margin-top:10px;">
+    <p>모델 입력 이미지 확인용</p>
+    <img id="debug-canvas-image" style="width:224px; height:224px; border:2px solid red;" />
+  </div>
+
   <script type="text/javascript">
     // 과일 모델
     //https://teachablemachine.withgoogle.com/models/7PbjkEbwL/
@@ -284,6 +289,12 @@
 
         console.log("분석 입력 canvas width:", inputCanvas.width);
         console.log("분석 입력 canvas height:", inputCanvas.height);
+
+        // 🔥 모델이 실제로 보는 224x224 이미지를 화면에 표시
+        const debugImage = document.getElementById("debug-canvas-image");
+        if (debugImage) {
+          debugImage.src = inputCanvas.toDataURL("image/jpeg");
+        }
 
         const prediction = await model.predict(inputCanvas, false);
 
