@@ -21,6 +21,9 @@
   <!-- progressbar & gray background -->
   <div class="layerPopup">
     <div class="spinner"></div>
+    <p style="color:white; margin-top:20px;">
+      AI 분석 중입니다...
+    </p>
   </div>
 
   <!-- image upload -->
@@ -74,6 +77,7 @@
     //https://teachablemachine.withgoogle.com/models/fLlc_zUOOM/
 
     let URL, model, webcam, labelContainer, maxPredictions;
+    let isPredicting = false;
 
     console.log("🔥 배포버전 확인: 2026-TEST-1");
 
@@ -241,9 +245,50 @@
     }
 
     async function progressbar() {
-      document.getElementsByClassName('layerPopup')[0].style.display = 'block';
-      await predict();
-      document.getElementsByClassName('layerPopup')[0].style.display = 'none';
+      // 🔥 이미 분석 중이면 중복 실행 막기
+      if (isPredicting) {
+        console.log("이미 분석 중입니다.");
+        return;
+      }
+
+      isPredicting = true;
+
+      const popup = document.getElementsByClassName('layerPopup')[0];
+
+      try {
+        // 🔥 로딩창 표시
+        popup.style.display = 'block';
+
+        // 🔥 버튼 잠금
+        predict_button.disabled = true;
+        link_button.disabled = true;
+        data_button.disabled = true;
+        start_button.disabled = true;
+
+        // 🔥 브라우저가 로딩창 먼저 그릴 시간 확보
+        await new Promise(resolve => setTimeout(resolve, 50));
+
+        // 분석 실행
+        await predict();
+
+      } catch (e) {
+        console.error("predict 에러:", e);
+
+      } finally {
+
+        // 🔥 로딩창 숨기기
+        popup.style.display = 'none';
+
+        // 🔥 버튼 다시 활성화
+        predict_button.disabled = false;
+        link_button.disabled = false;
+        data_button.disabled = false;
+
+        // 모델은 이미 로딩됐으므로 start는 계속 비활성 유지
+        start_button.disabled = true;
+
+        isPredicting = false;
+      }
     }
 
     function makeSquareCanvas(image) {
