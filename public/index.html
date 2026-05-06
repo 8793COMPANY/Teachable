@@ -90,6 +90,10 @@
       // loading start
       document.getElementsByClassName('layerPopup')[0].style.display = 'block';
 
+      await tf.setBackend("cpu");
+      await tf.ready();
+      console.log("tf backend:", tf.getBackend());
+
       URL = document.getElementById('predict-model').innerText;
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
@@ -236,9 +240,9 @@
       }
     }
 
-    function progressbar() {
+    async function progressbar() {
       document.getElementsByClassName('layerPopup')[0].style.display = 'block';
-      predict();
+      await predict();
       document.getElementsByClassName('layerPopup')[0].style.display = 'none';
     }
 
