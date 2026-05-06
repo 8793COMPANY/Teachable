@@ -9,26 +9,38 @@ body {
 .layerPopup {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 120%;
-    height: 120%;
-    background: rgba(146, 143, 143, 0.384);
+    inset: 0;
+
+    background: rgba(146, 143, 143, 0.55);
     z-index: 1000;
+
     justify-content: center;
     align-items: center;
-    margin: -30px 0 0 -30px;
+    flex-direction: column;
+
+    text-align: center;
+
+	overflow: hidden;
 }
 .spinner {
-    position: absolute;
-    top: 40%;
-    left: 39.9%;
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid #ffc462; /* orange */
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #ffc462;
     border-radius: 50%;
+
     width: 60px;
     height: 60px;
-    animation: spinner 2s linear infinite;
+
+    animation: spinner 1s linear infinite;
+}
+.loading-message {
+    color: white;
+    margin-top: 20px;
+
+    font-size: 20px;
+    font-family: 'SBAggroL';
+    font-weight: 300;
+
+    text-align: center;
 }
 @keyframes spinner {
     0% {
